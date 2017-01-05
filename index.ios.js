@@ -16,12 +16,6 @@ var styles = ReactNative.StyleSheet.create({
   }
 });
 
-class HelloWorld extends React.Component {
-  render(){
-    return <ReactNative.Text style={styles.text}> Hello World! (Again) </ReactNative.Text>;
-  }
-}; 
-
 class PropertyFinderApp extends React.Component {
   render() {
     return (
