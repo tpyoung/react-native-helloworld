@@ -57,13 +57,56 @@ var styles = StyleSheet.create({
     color: '#48BBEC'
   },
   image: {
+  marginTop: 10,
   width: 217,
   height: 138
 }
 });
 
+function urlForQueryAndPage(key, value, pageNumber) {
+  var data = {
+      country: 'uk',
+      pretty: '1',
+      encoding: 'json',
+      listing_type: 'buy',
+      action: 'search_listings',
+      page: pageNumber
+  };
+  data[key] = value;
+ 
+  var querystring = Object.keys(data)
+    .map(key => key + '=' + encodeURIComponent(data[key]))
+    .join('&');
+ 
+  return 'http://api.nestoria.co.uk/api?' + querystring;
+ };
+
 class SearchPage extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			searchString: 'london',
+			isLoading: false
+		};
+	}
+	onSearchTextChanged(event) {
+		this.setState({searchString: event.nativeEvent.text});
+	}
+	_executeQuery(query) {
+		console.log(query);
+		this.setState({ isLoading : true });
+	}
+	onSearchPressed() {
+		var query = urlForQueryAndPage('place_name', this.state.searchString, 1);
+  	this._executeQuery(query);
+	}		
+
 	render() {
+		var spinner = this.state.isLoading ?
+  ( <ActivityIndicator
+      size='large'/> ) :
+  ( <View/>);
+
 		return (
 			<View style={styles.container}>
 				<Text style={styles.description}> 
@@ -75,9 +118,12 @@ class SearchPage extends Component {
 				<View style={styles.flowRight}>
 				  <TextInput
 				    style={styles.searchInput}
+				    value={this.state.searchString}
+				    onChange={this.onSearchTextChanged.bind(this)}
 				    placeholder='Search Here'/>
 				  <TouchableHighlight style={styles.button}
-				      underlayColor='#99d9f4'>
+				  	onPress={this.onSearchPressed.bind(this)}
+				    underlayColor='#99d9f4'>
 				    <Text style={styles.buttonText}>
 				    	Go
 				    </Text>
@@ -92,8 +138,9 @@ class SearchPage extends Component {
 					</TouchableHighlight>
 				</View>
 				<Image source={require('./Resources/house.png')} style={styles.image}/>
+				{spinner}
 			</View>
-			);
+		);
 	}
 }
 
