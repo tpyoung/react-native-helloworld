@@ -86,7 +86,8 @@ class SearchPage extends Component {
 		super(props);
 		this.state = {
 			searchString: 'london',
-			isLoading: false
+			isLoading: false,
+			message: ''
 		};
 	}
 	onSearchTextChanged(event) {
@@ -95,17 +96,37 @@ class SearchPage extends Component {
 	_executeQuery(query) {
 		console.log(query);
 		this.setState({ isLoading : true });
+		fetch(query)
+			.then(response => response.json())
+			.then(json => this._handleResponse(json.response))
+			.catch(error => this.setState({
+				isLoading: false,
+				message: 'something bad happened ' + error
+			}));
 	}
+	_handleResponse(response) {
+		this.setState({isLoading: false, message: ''});
+		if (response.application_response_code.substr(0,1) === '1') {
+			console.log('Properties Found: ' + response.listing.length);
+		} else {
+			this.setState({message: 'Location not reconized. Please try again.'});
+		}
+	}
+
 	onSearchPressed() {
 		var query = urlForQueryAndPage('place_name', this.state.searchString, 1);
   	this._executeQuery(query);
 	}		
+
 
 	render() {
 		var spinner = this.state.isLoading ?
   ( <ActivityIndicator
       size='large'/> ) :
   ( <View/>);
+  	<Text style={styles.description}>
+  		{this.state.message}
+  	</Text>
 
 		return (
 			<View style={styles.container}>
