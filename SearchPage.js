@@ -11,6 +11,7 @@ import {
   Image
 } from 'react-native';
 
+var SearchResults = require('./SearchResults');
 var styles = StyleSheet.create({
   description: {
     marginBottom: 20,
@@ -106,8 +107,14 @@ class SearchPage extends Component {
 	}
 	_handleResponse(response) {
 		this.setState({isLoading: false, message: ''});
+			console.log('HI HI HI');
 		if (response.application_response_code.substr(0,1) === '1') {
-			console.log('Properties Found: ' + response.listing.length);
+			console.log('YAY YAY YAY');
+			this.props.navigator.push({
+				title: 'Results',
+				component: SearchResults,
+				passProps: {listings: response.listings}
+			});
 		} else {
 			this.setState({message: 'Location not reconized. Please try again.'});
 		}
