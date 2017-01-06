@@ -107,9 +107,7 @@ class SearchPage extends Component {
 	}
 	_handleResponse(response) {
 		this.setState({isLoading: false, message: ''});
-			console.log('HI HI HI');
 		if (response.application_response_code.substr(0,1) === '1') {
-			console.log('YAY YAY YAY');
 			this.props.navigator.push({
 				title: 'Results',
 				component: SearchResults,
