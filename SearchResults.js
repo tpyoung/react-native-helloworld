@@ -72,7 +72,6 @@ class SearchResults extends Component {
 		var property = this.props.listings.filter(prop.lister_url === listerURL)[0];
 	}
 
-
 	render(){
     return (
       <ListView
